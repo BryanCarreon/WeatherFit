@@ -16,8 +16,14 @@
 
     <h3>Forecast (Today/Tomorrow):</h3>
     {% if forecast %}
-    <p>Min: {{ forecast.temp_min }} | Max: {{ forecast.temp_max }}</p>
-    <p>{{ forecast.desc }}</p>
+    <ul>
+    {% for day in forecast %}
+        <li>
+            <strong>{{ day.date }}</strong>: {{ day.desc }} <br>
+            Min: {{ day.temp_min }}°F | Max: {{ day.temp_max }}°F | Precip: {{ day.precip }}%
+        </li>
+    {% endfor %}
+    </ul>
     {% else %}
     <p>Not available.</p>
     {% endif %}

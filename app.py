@@ -58,7 +58,8 @@ def dashboard():
     city = get_city(local_id)  # From Firestore
     
     current_weather = get_weather_now(city)
-    forecast = get_forecast(city)
+    #forecast = get_forecast(city)
+    forecast = get_forecast(city, days=3)
 
     return render_template('dashboard.html', 
         email=email,
