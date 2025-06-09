@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from utils.firebase_auth import signup_user, login_user, save_city, get_city, get_email_from_token
+from utils.weather import get_weather_now, get_forecast
 import os
 from dotenv import load_dotenv
 
@@ -55,8 +56,16 @@ def dashboard():
     local_id = session['localId']
     email = get_email_from_token(session['idToken'])
     city = get_city(local_id)  # From Firestore
+    
+    current_weather = get_weather_now(city)
+    forecast = get_forecast(city)
 
-    return render_template('dashboard.html', email=email, city=city)
+    return render_template('dashboard.html', 
+        email=email,
+        city=city,
+        current_weather=current_weather,
+        forecast=forecast
+    )
 
 @app.route('/')
 def home():
