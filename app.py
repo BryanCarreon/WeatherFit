@@ -30,7 +30,7 @@ def signup():
                 print("Error saving to Firestore:", e)
                 return "Signup succeeded but Firestore save failed."
 
-            return "Signup successful and user data saved!"  # temp confirmation
+            return redirect(url_for('login'))
         return "Signup failed"
     
     return render_template('signup.html')
