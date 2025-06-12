@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ email }}!</h2>
+    <p><strong>City:</strong> {{ city }}</p>
+
+    <h3>Current Weather:</h3>
+    {%if current_weather %}
+    <p>{{current_weather.temp}} - {{current_weather.desc}}</p>
+    {%else%}
+    <p>Not Available</p>
+    {%endif%}
+
+    <h3>Forecast (Today/Tomorrow):</h3>
+    {% if forecast %}
+    <ul>
+    {% for day in forecast %}
+        <li>
+            <strong>{{ day.date }}</strong>: {{ day.desc }} <br>
+            Min: {{ day.temp_min }}°F | Max: {{ day.temp_max }}°F | Precip: {{ day.precip }}%
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>Not available.</p>
+    {% endif %}
+
+    <h3>Clothing Suggestion:</h3>
+    <p>{{ ai_suggestion }}</p>
+
+    <a href="/logout">Log out</a>
+</body>
+</html>
