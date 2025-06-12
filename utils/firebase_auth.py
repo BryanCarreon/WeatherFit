@@ -42,11 +42,12 @@ def login_user(email, password):
         return True, res["idToken"], res["localId"]
     return False, None, None
 
-def save_city(user_id, city):
+def save_city(user_id, city, email):
     url = f"{FIRESTORE_URL}/users/{user_id}"
     data = {
         "fields": {
-            "city": {"stringValue": city}
+            "city": {"stringValue": city},
+            "email": {"stringValue": email}
         }
     }
     
@@ -69,3 +70,19 @@ def get_email_from_token(id_token):
     except Exception as e:
         print("Error decoding token:", e)
         return "Unknown"
+    
+def get_all_users():
+    url = f"{FIRESTORE_URL}/users"
+    res = requests.get(url).json()
+
+    users = []
+    for doc in res.get("documents", []):
+        fields = doc.get("fields", {})
+        email = fields.get("email", {}).get("stringValue", "")
+        user_id = doc["name"].split("/")[-1]
+        if email:
+            users.append({
+                "id": user_id,
+                "email": email
+            })
+    return users

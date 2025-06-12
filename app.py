@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from utils.firebase_auth import signup_user, login_user, save_city, get_city, get_email_from_token
+from utils.firebase_auth import signup_user, login_user, save_city, get_city, get_email_from_token, get_all_users
 from utils.weather import get_weather_now, get_forecast
 from utils.openAI_recommender import outfit_recommendation 
 from utils.emailing import send_weather_email
@@ -22,7 +22,7 @@ def signup():
             session['localId'] = local_id
             #return redirect(url_for('dashboard'))  # We'll build this later
             try:
-                save_city(local_id, city)
+                save_city(local_id, city, email)
             except Exception as e:
                 print("Error saving to Firestore:", e)
                 return "Signup succeeded but Firestore save failed."
@@ -77,7 +77,8 @@ def dashboard():
 def send_email():
     local_id = session['localId']
     city = get_city(local_id)  # From Firestore
-    
+    email = get_email_from_token(session['idToken'])  # <- Get logged-in user's email
+
     forecast = get_forecast(city, days=1)
     
     if not forecast:

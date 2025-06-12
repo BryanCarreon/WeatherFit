@@ -9,12 +9,12 @@ EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 TO_EMAIL = os.getenv("RECIPIENT_EMAIL")  # testing from .env
 
-def send_weather_email(subject, body):
+def send_weather_email(subject, body, recipient_email = None):
     try:
         msg = MIMEText(body)
         msg["Subject"] = subject
         msg["From"] = EMAIL_ADDRESS
-        msg["To"] = TO_EMAIL
+        msg["To"] = recipient_email or TO_EMAIL
         
         with smtplib.SMTP_SSL("smtp.gmail.com",465) as smtp:
             smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
