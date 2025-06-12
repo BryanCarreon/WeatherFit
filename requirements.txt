@@ -1,5 +1,10 @@
 flask
 requests
+openai
+firebase-admin
 python-dotenv
 pyjwt
+schedule
 APScheduler
+smtplib
+gunicorn
