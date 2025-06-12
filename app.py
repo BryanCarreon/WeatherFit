@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from utils.firebase_auth import signup_user, login_user, save_city, get_city, get_email_from_token
 from utils.weather import get_weather_now, get_forecast
+from utils.openAI_recommender import outfit_recommendation 
 import os
 from dotenv import load_dotenv
 
@@ -60,12 +61,15 @@ def dashboard():
     current_weather = get_weather_now(city)
     #forecast = get_forecast(city)
     forecast = get_forecast(city, days=3)
+    ai_suggestion = outfit_recommendation(forecast[0]) if forecast else "No forecast available"
+
 
     return render_template('dashboard.html', 
         email=email,
         city=city,
         current_weather=current_weather,
-        forecast=forecast
+        forecast=forecast,
+        ai_suggestion=ai_suggestion
     )
 
 @app.route('/')
