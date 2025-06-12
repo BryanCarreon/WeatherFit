@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from utils.firebase_auth import signup_user, login_user, save_city, get_city, get_email_from_token
 from utils.weather import get_weather_now, get_forecast
 from utils.openAI_recommender import outfit_recommendation 
+from utils.emailing import send_weather_email
 import os
 from dotenv import load_dotenv
 
@@ -71,6 +72,26 @@ def dashboard():
         forecast=forecast,
         ai_suggestion=ai_suggestion
     )
+
+@app.route('/send_email')
+def send_email():
+    local_id = session['localId']
+    city = get_city(local_id)  # From Firestore
+    
+    forecast = get_forecast(city, days=1)
+    
+    if not forecast:
+        return "No forecast data available."
+    
+    weather_data = forecast[0]["values"] if "values" in forecast[0] else forecast[0]
+    
+    suggestion = outfit_recommendation(weather_data)
+    
+    subject = f"WeatherFit Outfit for {forecast[0].get('date', 'Today')}"
+    body = suggestion  # Use OpenAI's output directly
+    
+    send_weather_email(subject, body)
+    return "Email with outfit suggestion sent!"
 
 @app.route('/')
 def home():
