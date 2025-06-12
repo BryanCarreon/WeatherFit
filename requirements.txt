@@ -6,5 +6,4 @@ python-dotenv
 pyjwt
 schedule
 APScheduler
-smtplib
 gunicorn
